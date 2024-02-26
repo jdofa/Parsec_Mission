@@ -1,7 +1,21 @@
 import api from '../utils/axios';
+import type { Task } from '../utils/types';
 
 export const useSubmitTask = () => {
-  /**
+  const submitTask = (submittedTask: Task, addToTaskArr: Function) => {
+    api.post<Task>(`/mission-two`, submittedTask)
+      .then((response) => {
+        // Function that will add the new task to the tasks array
+        addToTaskArr();
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+  return { submitTask };
+};
+
+/**
    * Mission two: Insert a task into the database.
    * 
    * Write and return a function here which will submit
@@ -10,7 +24,7 @@ export const useSubmitTask = () => {
    * from the server is then placed into the tasks list.
    * 
    * Definition of done:
-   * [ ] the function sends a post request to the server
+   * [x] the function sends a post request to the server
    * [ ] the server inserts the task into the database
    * [ ] the newly inserted task is placed into the tasks list
    * 
@@ -24,4 +38,3 @@ export const useSubmitTask = () => {
    *   - Are there any obvious performance issues?
    *   - Are there comments where necessary?
    */
-};
