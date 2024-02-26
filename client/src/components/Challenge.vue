@@ -10,12 +10,16 @@
       >
         <TaskDisplay
           v-for="task in tasks"
-          :key="task.tasksId"
+          :key="task.tasks_id"
           :task="task"
         />
 
         <!-- Mission one is inside the task input! -->
-        <TaskInput />
+        <TaskInput 
+          @taskSubmitted="addToTaskArr" 
+          :lastTaskId="tasks[tasks.length - 1].tasks_id" 
+          :taskAmount="tasks.length"
+        />
       </div>
     </div>
   </div>
@@ -24,11 +28,17 @@
 <script setup lang="ts">
 import TaskDisplay from './TaskDisplay.vue';
 import TaskInput from './TaskInput.vue';
+import type { Task } from '../utils/types'; 
 
 /* composables */
 import { useGetTasks } from '../composables/useGetTasks';
 
 const { tasks, state } = useGetTasks();
+
+//Push new task to array
+function addToTaskArr(task: Task){
+  tasks.value.push(task);
+}
 </script>
 
 <style lang="scss">

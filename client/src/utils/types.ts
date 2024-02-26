@@ -1,6 +1,6 @@
 export type Task = {
-  tasksId: number;
+  tasks_id: number;
   content: string;
-  isComplete: boolean;
+  is_complete: boolean;
   order: number;
 };

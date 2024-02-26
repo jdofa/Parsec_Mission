@@ -3,10 +3,10 @@ import type { Task } from '../utils/types';
 
 export const useSubmitTask = () => {
   const submitTask = (submittedTask: Task, addToTaskArr: Function) => {
-    api.post<Task>(`/mission-two`, submittedTask)
+    api.post<Task>(`/insert-task`, submittedTask)
       .then((response) => {
         // Function that will add the new task to the tasks array
-        addToTaskArr();
+        addToTaskArr(submittedTask);
       })
       .catch((error) => {
         console.error(error);
@@ -25,8 +25,8 @@ export const useSubmitTask = () => {
    * 
    * Definition of done:
    * [x] the function sends a post request to the server
-   * [ ] the server inserts the task into the database
-   * [ ] the newly inserted task is placed into the tasks list
+   * [x] the server inserts the task into the database
+   * [x] the newly inserted task is placed into the tasks list
    * 
    * Your submission will be judged out of 10 points based on
    * the following criteria:

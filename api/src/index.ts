@@ -32,17 +32,30 @@ const init = async () => {
 
   server.route({
     method: 'POST',
-    path: '/mission-two', // Bonus points if you give it a sensical name ;)
+    path: '/insert-task', // Bonus points if you give it a sensical name ;)
     handler: async (r, h) => {
-      /**
+      try{
+        // Deep clone the object to avoid mutating the original
+        // Can use Lodash instead to deep clone and not lose data, if dealing with functions, symbols, or undefined values
+        const newTask = JSON.parse(JSON.stringify(r.payload));
+        const task = await db('tasks').insert({content: newTask.content});
+        return h.response(task).code(201);
+      } catch (error) {
+        console.error(error);
+        return h.response().code(500)        
+      }
+    } 
+  });
+
+  /**
        * Mission Two: Insert a task into the database.
        * 
        * Receive a post request from the front end
        * and insert it into the database.details, too
        * 
        * Definition of done:
-       * [ ] the record is inserted into the database
-       * [ ] a success response is returned
+       * [x] the record is inserted into the database
+       * [x] a success response is returned
        * 
        * Your submission will be judged out of 10 points based on
        * the following criteria:
@@ -54,8 +67,6 @@ const init = async () => {
        *   - Are there any obvious performance issues?
        *   - Are there comments where necessary?
        */
-    } 
-  });
 
   await server.start();
   console.log('Server running on %s', server.info.uri);

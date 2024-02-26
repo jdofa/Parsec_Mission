@@ -6,7 +6,7 @@
       Definition of done:
       [x] User can type into the input
       [x] A button with the text "Add" is visible
-      [ ] User can click the button to submit the input
+      [x] User can click the button to submit the input
        
       Your submission will be judged out of ten points based
       on the following criteria:
@@ -22,8 +22,8 @@
 <template>
   <div class="task-input">
     <div id="input-task-wrapper">
-      <input type="text" placeholder="Add a new task...." v-model="taskContent" @keydown.enter="pushTask()"/>
-      <button @click="pushTask()">Add</button>
+      <input type="text" placeholder="Add a new task...." v-model="taskContent" @keydown.enter="pushTask(lastTaskId, taskAmount)"/>
+      <button @click="pushTask(lastTaskId, taskAmount)">Add</button>
     </div>
   </div>
 </template>
@@ -36,16 +36,39 @@
 -->
 <script setup lang="ts">
   import { ref } from 'vue';
+  import type { Task } from '../utils/types'; 
 
+  /* composables */
+  import { useSubmitTask } from '../composables/useSubmitTask';
+
+  defineProps<{ 
+    lastTaskId: number, 
+    taskAmount: number;
+  }>();
+  
+  const {submitTask} =  useSubmitTask();
   const taskContent = ref('');
+
+  const emit = defineEmits(['taskSubmitted']); 
+  //Emits the task to the parent component (Challenge.vue), where it will be added to the tasks array.
+  function sendTask(task: Task){
+    emit('taskSubmitted', task );
+    return;
+  }
   
   // Insert task into the database
-  function pushTask(){
+  function pushTask(lastTaskId: number, taskAmount: number){
     // Maintain data integrity by removing whitespace and checking length
     const content = taskContent.value.trim();
     if(content.length > 0 && content.length <= 255){ // Noticed in schema char limit was not set, so default is usually 255
-      // Insert task, for now print to console
-      console.log('Task:', content);
+      //Setting the new task id
+      const newId = lastTaskId + 1;
+      if(lastTaskId === undefined){
+        const newId = 1;
+      }
+      const task = {tasks_id: newId, content: content, is_complete: false, order: taskAmount + 1};
+      submitTask(task, sendTask); //Submit task to the database, with the callback to emit the task to the parent component
+      taskContent.value = '';
     }
     else{
       // Alert user to the issue
