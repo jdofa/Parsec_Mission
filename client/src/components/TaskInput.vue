@@ -22,8 +22,8 @@
 <template>
   <div class="task-input">
     <div id="input-task-wrapper">
-      <input type="text" placeholder="Add a task" />
-      <button>Add</button>
+      <input type="text" placeholder="Add a new task...." v-model="taskContent" @keydown.enter="pushTask()"/>
+      <button @click="pushTask()">Add</button>
     </div>
   </div>
 </template>
@@ -35,6 +35,23 @@
  * Good luck!
 -->
 <script setup lang="ts">
+  import { ref } from 'vue';
+
+  const taskContent = ref('');
+  
+  // Insert task into the database
+  function pushTask(){
+    // Maintain data integrity by removing whitespace and checking length
+    const content = taskContent.value.trim();
+    if(content.length > 0 && content.length <= 255){ // Noticed in schema char limit was not set, so default is usually 255
+      // Insert task, for now print to console
+      console.log('Task:', content);
+    }
+    else{
+      // Alert user to the issue
+      alert('Task must be between 1 and 255 characters long');
+    }
+  }
 
 </script>
 
