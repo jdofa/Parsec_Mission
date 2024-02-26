@@ -1,14 +1,12 @@
-<template>
-  <div class="task-display">
-    <!--
+<!--
       Mission Two: Add ability to check and uncheck tasks
 
       Display the tasks according to the design in the README.md file.
 
       Definition of done:
-      [ ] A checkbox is visible to the left of the task
-      [ ] Clicking a checked task will uncheck it
-      [ ] Clicking an unchecked task will check it
+      [x] A checkbox is visible to the left of the task
+      [x] Clicking a checked task will uncheck it
+      [x] Clicking an unchecked task will check it
       [ ] All task changes are persisted to the database
 
       Your submission will be judged out of ten points based
@@ -21,7 +19,15 @@
         - Are concerns clearly separated? (e.g. clear responsibilities for functions, etc.) - 3 point
         - Is the code easy to read and understand? - 2 points
     -->
-    <p>{{ task.content }}</p>
+
+
+<!-- Although this mission wasn't listed in read.me, I completed it just in case and for fun.-->   
+<template>
+  <div class="task-display">
+    <div id="task-content-wrapper">
+      <input type="checkbox" />
+      <p>{{ task.content }}</p>
+    </div>
   </div>
 </template>
 
@@ -34,12 +40,20 @@ defineProps<{
 </script>
 
 <style scoped lang="scss">
-.task-display {
-  color: var(--color-heading);
-  font-size: var(--fs-3);
-  font-weight: 500;
-  box-shadow: var(--box-shadow-1);
-  padding: var(--space-2) var(--space-3);
-  border-radius: var(--border-radius-1);
-}
+  div#task-content-wrapper {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+  div#task-content-wrapper input {
+    cursor: pointer;
+  }
+  .task-display {
+    color: var(--color-heading);
+    font-size: var(--fs-3);
+    font-weight: 500;
+    box-shadow: var(--box-shadow-1);
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--border-radius-1);
+  }
 </style>
