@@ -42,7 +42,7 @@
   import { useSubmitTask } from '../composables/useSubmitTask';
 
   defineProps<{ 
-    lastTaskId: number, 
+    lastTaskId: number; 
     taskAmount: number;
   }>();
   

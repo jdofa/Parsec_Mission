@@ -21,9 +21,26 @@ const init = async () => {
     path: '/tasks',
     handler: async (r, h) => {
       try {
-        const { rows } = await db.raw('select * from tasks');
+        // Had to order because the update query re-orders the tasks
+        const { rows } = await db.raw('select * from tasks ORDER BY tasks_id ASC'); 
         return h.response(rows).code(200)
       } catch (error) {
+        console.error(error);
+        return h.response().code(500)        
+      }
+    } 
+  });
+
+  server.route({
+    method: 'PUT',
+    path: '/update-task', 
+    handler: async (r, h) => {
+      try {
+        const newTask = JSON.parse(JSON.stringify(r.payload));
+        const task = await db.raw('UPDATE tasks SET is_complete = (?) WHERE tasks_id = (?)', [newTask.is_complete, newTask.tasks_id]);
+        return h.response(task).code(204);
+      } 
+      catch (error) {
         console.error(error);
         return h.response().code(500)        
       }

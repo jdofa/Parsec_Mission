@@ -7,7 +7,7 @@
       [x] A checkbox is visible to the left of the task
       [x] Clicking a checked task will uncheck it
       [x] Clicking an unchecked task will check it
-      [ ] All task changes are persisted to the database
+      [x] All task changes are persisted to the database
 
       Your submission will be judged out of ten points based
       on the following criteria:
@@ -25,18 +25,37 @@
 <template>
   <div class="task-display">
     <div id="task-content-wrapper">
-      <input type="checkbox" />
+      <input type="checkbox" :checked="completed" @click="isChecked(task)" />
       <p>{{ task.content }}</p>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import type { Task } from '../utils/types';
+  import type { Task } from '../utils/types';
 
-defineProps<{
-  task: Task;
-}>();
+  /* composables */
+  import { useUpdateTask } from '../composables/useUpdateTask';
+
+  const {updateTask} =  useUpdateTask();
+  const emit = defineEmits(['taskUpdate']);
+
+  defineProps<{
+    task: Task;
+    completed: boolean;
+  }>();
+
+  //Emits the task to the parent component (Challenge.vue), where it will be updating the tasks array.
+  function sendTask(task: Task){
+    emit('taskUpdate', task );
+    return;
+  }
+
+  //When click on checkbox, update task in database
+  function isChecked(task: Task){
+    task.is_complete = !task.is_complete;
+    updateTask(task, sendTask);
+  }
 </script>
 
 <style scoped lang="scss">

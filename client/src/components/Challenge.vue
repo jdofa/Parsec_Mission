@@ -9,9 +9,11 @@
         class="items"
       >
         <TaskDisplay
+          @taskUpdate="updateTask"
           v-for="task in tasks"
           :key="task.tasks_id"
           :task="task"
+          :completed="task.is_complete"
         />
 
         <!-- Mission one is inside the task input! -->
@@ -26,19 +28,25 @@
 </template>
 
 <script setup lang="ts">
-import TaskDisplay from './TaskDisplay.vue';
-import TaskInput from './TaskInput.vue';
-import type { Task } from '../utils/types'; 
+  import TaskDisplay from './TaskDisplay.vue';
+  import TaskInput from './TaskInput.vue';
+  import type { Task } from '../utils/types'; 
 
-/* composables */
-import { useGetTasks } from '../composables/useGetTasks';
+  /* composables */
+  import { useGetTasks } from '../composables/useGetTasks';
 
-const { tasks, state } = useGetTasks();
+  const { tasks, state } = useGetTasks();
 
-//Push new task to array
-function addToTaskArr(task: Task){
-  tasks.value.push(task);
-}
+  //Push new task to array
+  function addToTaskArr(task: Task){
+    tasks.value.push(task);
+  }
+
+  //Update if task is completed or not to task in array
+  function updateTask(task: Task){
+    const index = tasks.value.findIndex((t) => t.tasks_id === task.tasks_id);
+    tasks.value[index] = task;
+  }
 </script>
 
 <style lang="scss">
